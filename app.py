@@ -16,6 +16,18 @@ biases_list = {
     "invisibilisation": ["n’a pas existé", "sans histoire", "sans culture"]
 }
 
+@app.route('/')
+def home():
+    return jsonify({
+        "message": "Bienvenue sur RE-Educ'-IA Core",
+        "available_endpoints": [
+            "/biasScanner",
+            "/contextAdder",
+            "/roleSwitch",
+            "/promptInjector"
+        ]
+    })
+
 @app.route('/biasScanner', methods=['POST'])
 def bias_scanner():
     data = request.get_json()
@@ -40,7 +52,6 @@ def bias_scanner():
         "suggested_reformulation": reformulated
     })
 
-
 @app.route('/contextAdder', methods=['POST'])
 def context_adder():
     data = request.get_json()
@@ -56,7 +67,6 @@ def context_adder():
         "original_text": text,
         "added_context": added_context
     })
-
 
 @app.route('/roleSwitch', methods=['POST'])
 def role_switch():
@@ -75,7 +85,6 @@ def role_switch():
         "rephrased_text": reformulated
     })
 
-
 @app.route('/promptInjector', methods=['GET'])
 def prompt_injector():
     topic = request.args.get('topic', 'Histoire')
@@ -88,19 +97,5 @@ def prompt_injector():
         "generated_prompt": generated_prompt
     })
 
-
-@app.route('/')
-def home():
-    return jsonify({
-        "message": "Bienvenue sur RE-Educ'-IA Core",
-        "available_endpoints": [
-            "/biasScanner",
-            "/contextAdder",
-            "/roleSwitch",
-            "/promptInjector"
-        ]
-    })
-
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=10000, debug=True)
