@@ -25,3 +25,25 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+# Contribuer à RE-Educ'-IA Core
+
+Merci de vouloir contribuer à ce projet militante et décoloniale !
+
+## 📌 Comment contribuer
+
+1. **Fork le dépôt**
+2. **Clone ton fork**
+3. **Crée une branche (`git checkout -b ma-nouvelle-fonction`)**
+4. **Commit tes changements (`git commit -m "Ajout d'un nouveau module contextuel")`**
+5. **Push sur ta branche (`git push origin ma-nouvelle-fonction`)**
+6. **Ouvre une Pull Request**
+
+## 🧪 Tests
+Si tu modifies ou ajoutes des modules, merci de mettre à jour les tests dans `/tests`.
+
+## 📦 Idées d'améliorations
+- Ajout d'une base de données contextuelle
+- Support multilingue
+- Interface web (frontend)
+- Intégration avec une IA open source
