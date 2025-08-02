@@ -1,49 +1,24 @@
+# 🤝 Comment contribuer
 
+Merci de ton intérêt ! Voici comment participer :
 
----Code Protégé---
+## 1. Proposer une amélioration
 
-### 4. **`LICENSE` – MIT 
+- Ouvre une **Issue** pour signaler un biais manquant ou un problème
+- Suggère des **mots-clés**, **reformulations**, **contextes**
 
-MIT License
+## 2. Ajouter du code
 
-Copyright (c) 2025 Ti Moun Embètan Afrocentré
+1. `fork` le dépôt
+2. Crée une branche : `git switch -c feat/nouvelle-fonction`
+3. Commit tes changements
+4. Push : `git push origin feat/nouvelle-fonction`
+5. Ouvre une **Pull Request**
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+## 3. Traduire
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Tu peux aider à traduire le projet en anglais, arabe, swahili, etc.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+---
 
-# Contribuer à RE-Educ'-IA Core
-
-Merci de vouloir contribuer à ce projet militante et décoloniale !
-
-## 📌 Comment contribuer
-
-1. **Fork le dépôt**
-2. **Clone ton fork**
-3. **Crée une branche (`git checkout -b ma-nouvelle-fonction`)**
-4. **Commit tes changements (`git commit -m "Ajout d'un nouveau module contextuel")`**
-5. **Push sur ta branche (`git push origin ma-nouvelle-fonction`)**
-6. **Ouvre une Pull Request**
-
-## 🧪 Tests
-Si tu modifies ou ajoutes des modules, merci de mettre à jour les tests dans `/tests`.
-
-## 📦 Idées d'améliorations
-- Ajout d'une base de données contextuelle
-- Support multilingue
-- Interface web (frontend)
-- Intégration avec une IA open source
+Merci pour ton engagement contre les biais dans les IA ! 🌍✊
