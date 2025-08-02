@@ -1,27 +1,20 @@
-# 🛡️ RE-Educ'-IA — Détecteur de Biais & Inclusion
+# 🌍 RE-Educ'-IA Core
 
-> **Une API pour détecter, corriger et éradiquer les biais racistes, coloniaux, sexistes et non inclusifs dans les textes et algorithmes d’IA.**
+> Une API open source pour détecter et corriger les biais coloniaux, racistes et non inclusifs dans les textes générés par IA.
 
-🔍 Analyse les discours biaisés  
-🌍 Promeut une perspective décoloniale et inclusive  
-📚 Outil pédagogique pour l’éducation, la recherche et les IA génératives  
+## 🎯 Objectif
+Démanteler les récits eurocentrés, invisibilisateurs et stigmatisants dans les systèmes d'IA, l'éducation et les projets technologiques.
 
----
+## 🚀 API
 
-## 🚀 Fonctionnalités
-
-- Détecte les **biais raciaux, eurocentrés, sexistes, colonialistes**
-- Identifie les **schémas algorithmiques discriminants**
-- Propose des **reformulations inclusives**
-- Ajoute du **contexte historique manquant**
-- API REST simple, documentée, prête à l’usage
-
----
+- `POST /biasScanner` : Détecte les biais & suggère reformulation
+- `POST /contextAdder` : Ajoute du contexte historique
+- `POST /roleSwitch` : Reformule avec une perspective décoloniale
+- `GET /promptInjector` : Génère des prompts inclusifs
 
 ## 📦 Installation
 
 ```bash
-git clone https://github.com/ton-pseudo/reeduc-ia.git
-cd reeduc-ia
+git clone https://github.com/ton-pseudo/re-educ-ia-core
 pip install -r requirements.txt
-uvicorn src/main:app --reload
+python app/main.py
