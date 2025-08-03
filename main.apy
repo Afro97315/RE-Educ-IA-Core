@@ -1,247 +1,152 @@
-# fichier : main.py
-
-from fastapi import FastAPI, HTTPException, Query
-from pydantic import BaseModel
-from typing import List, Dict, Optional
+# app/main.py
+from flask import Blueprint, request, jsonify
+import os
 import re
-import logging
 
-# === Configuration de base ===
-app = FastAPI(
-    title="🛡️ RE-Educ'-IA — Détecteur de Biais & Inclusion",
-    description="""
-    API pour détecter, analyser et corriger les biais racistes, coloniaux, sexistes et discriminants 
-    dans les textes, prompts IA et documents institutionnels.
-    
-    🎯 Objectif : Éradiquer les récits non inclusifs et promouvoir des algorithmes justes.
-    """,
-    version="2.0",
-    docs_url="/",
-    redoc_url="/docs"
-)
+# Charger les données depuis les fichiers JSON
+from app.utils import load_json_data
 
-# === Journalisation pour audit ===
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("RE-Educ-IA")
+main_blueprint = Blueprint('main', __name__)
 
-# === BASES DE CONNAISSANCE ===
+# Charger les données
+BIASES_LIST = load_json_data('biases.json')
+CONTEXT_DB = load_json_data('contexts.json')
+REFORMULATIONS_RAW = load_json_data('reformulations.json')
 
-# 1. Catégories de biais avec mots-clés, explications et reformulations
-BIAS_DATABASE = {
-    "racisme": {
-        "keywords": [
-            "sang impur", "inférieur", "primitif", "tribal", "barbare", "race supérieure",
-            "nègre", "bamboula", "zoulou", "négritude"  # certains utilisés historiquement de façon péjorative
-        ],
-        "explanation": "Utilisation de termes racisants ou hiérarchisation raciale des peuples.",
-        "inclusive_rewrite": "Toutes les personnes sont égales en dignité et en droits, indépendamment de leur origine."
-    },
-    "eurocentrisme": {
-        "keywords": [
-            "découverte", "mission civilisatrice", "avant la colonisation c'était le chaos",
-            "pas de civilisation", "sans histoire", "non développé"
-        ],
-        "explanation": "Présente l’Europe comme le seul berceau de la civilisation, effaçant les empires africains, asiatiques et amérindiens.",
-        "inclusive_rewrite": "Les sociétés africaines, comme le Mali, le Kongo ou le Ghana, avaient des États organisés, des systèmes économiques et des savoirs avancés bien avant la colonisation."
-    },
-    "sexisme_et_androcentrisme": {
-        "keywords": [
-            "les rois ont construit", "fondateur", "chef de guerre", "il", "homme", "patriarcat naturel"
-        ],
-        "explanation": "Invisibilise les femmes et les leaderships féminins dans l’histoire et la politique.",
-        "inclusive_rewrite": "Des femmes comme Yaa Asantewaa, Nehanda, ou la reine Amina de Zaria ont dirigé des empires et mené des résistances majeures."
-    },
-    "invisibilisation_culturelle": {
-        "keywords": [
-            "sans écriture", "oralité = absence de savoir", "pas de science",
-            "aucune technologie", "pas de philosophie"
-        ],
-        "explanation": "Dément les savoirs endogènes (médecine, astronomie, droit, linguistique) des sociétés non européennes.",
-        "inclusive_rewrite": "Les sociétés orales transmettent des savoirs complexes par la parole, la danse, les symboles et les griots."
-    },
-    "orientalisme_et_exotisation": {
-        "keywords": [
-            "mystérieux", "fanatique", "opprimé", "voilé par nature", "terre sacrée", "archaïque"
-        ],
-        "explanation": "Reduit les peuples à des stéréotypes exotiques ou religieux, sans agence ni diversité.",
-        "inclusive_rewrite": "Les sociétés du Sud ont des dynamiques internes complexes, des résistances, des innovations et des pensées critiques."
-    }
+# Précompiler les regex
+REFORMULATIONS_MAP = {
+    re.compile(pattern, re.IGNORECASE): replacement
+    for pattern, replacement in REFORMULATIONS_RAW.items()
 }
 
-# 2. Reformulations automatiques (regex pour plus de précision)
-REWRITING_RULES = {
-    r'\bdécouverte\b': "prise de contact avec une région déjà peuplée et organisée",
-    r'\bmission civilisatrice\b': "justification idéologique de l’exploitation coloniale",
-    r'\bprimitif\b': "différent selon des logiques culturelles propres",
-    r'\btribal\b': "organisé selon des structures communautaires ancestrales",
-    r'\bsang impur\b': "concept raciste sans fondement scientifique",
-    r'\brace supérieure\b': "hiérarchie raciale dépassée et non valide",
-    r'\b(arriéré|non civilisé)\b': "ayant un modèle de développement différent"
-}
-
-# 3. Algorithmes ou patterns suspects (pour détecter des biais dans les prompts IA)
-ALGORITHMIC_BIAS_PATTERNS = {
-    "stéréotype_professionnel": {
-        "pattern": r"(femme|noir|arabe).*\b(ménage|nettoyage|terroriste|danse|sportif)\b",
-        "warning": "Association stéréotypée entre identité et métier. Risque de biais dans les suggestions IA."
-    },
-    "essentialisation": {
-        "pattern": r"(toujours|jamais|naturellement|par essence) (violence|docilité|paresse|passion)",
-        "warning": "Essentialisation dangereuse : attribue des traits fixes à un groupe."
-    },
-    "absence_de_contexte": {
-        "pattern": r"(pauvreté|instabilité).*sans mention.*colonisation|esclavage|frontières",
-        "warning": "Analyse incomplète : ignore les causes historiques structurelles."
-    }
-}
-
-# 4. Perspectives valides
 VALID_PERSPECTIVES = [
-    "afrocentré",
-    "décolonial",
-    "féministe noire",
-    "autochtone",
-    "intersectionnel",
-    "mondialisé sud-sud"
+    'afrocentré',
+    'décolonial',
+    'féministe noire',
+    'autochtone',
+    'mondialisé',
+    'intersectionnel'
 ]
 
-# === MODÈLES PYDANTIC ===
+PROMPT_TEMPLATES = {
+    "formation": "Explique {topic} depuis une perspective {perspective}, en mettant en avant les savoirs endogènes.",
+    "éducation": "Raconte {topic} comme on l'enseignerait dans une école valorisant les récits africains.",
+    "critique": "Analyse les biais eurocentrés dans le récit dominant de {topic}.",
+    "default": "Explore {topic} avec une perspective {perspective}."
+}
 
-class ScanRequest(BaseModel):
-    text: str
-    target_perspective: str = "afrocentré"
-    include_context: bool = True
+def validate_request(data, required_fields=['text']):
+    errors = []
+    for field in required_fields:
+        if field not in 
+            errors.append(f"Le champ '{field}' est requis.")
+    return errors
 
-class BiasDetected(BaseModel):
-    type: str
-    keywords_found: List[str]
-    explanation: str
-    suggested_fix: str
-
-class AlgorithmicWarning(BaseModel):
-    type: str
-    pattern_match: str
-    warning: str
-
-class ScanResponse(BaseModel):
-    original_text: str
-    detected_biases: List[BiasDetected]
-    algorithmic_warnings: List[AlgorithmicWarning]
-    suggested_reformulation: str
-    added_contextual_notes: List[str] = []
-    educational_note: str
-    is_inclusive: bool
-
-# === FONCTIONS D'ANALYSE ===
-
-def find_biases(text: str) -> List[Dict]:
-    found = []
-    text_lower = text.lower()
-    matched_words = set()
-
-    for bias_type, data in BIAS_DATABASE.items():
-        keywords_found = []
-        for kw in data["keywords"]:
-            if re.search(r'\b' + re.escape(kw) + r'\b', text_lower, re.IGNORECASE):
-                keywords_found.append(kw)
-                matched_words.add(kw)
-
-        if keywords_found:
-            found.append({
-                "type": bias_type,
-                "keywords_found": keywords_found,
-                "explanation": data["explanation"],
-                "suggested_fix": data["inclusive_rewrite"]
-            })
-
-    logger.info(f"Mots biaisés détectés : {list(matched_words)}")
-    return found
-
-def detect_algorithmic_patterns(text: str) -> List[Dict]:
-    warnings = []
-    for name, data in ALGORITHMIC_BIAS_PATTERNS.items():
-        match = re.search(data["pattern"], text, re.IGNORECASE)
-        if match:
-            warnings.append({
-                "type": name,
-                "pattern_match": match.group(0),
-                "warning": data["warning"]
-            })
-    return warnings
-
-def apply_inclusive_rewriting(text: str) -> str:
-    result = text
-    for pattern, replacement in REWRITING_RULES.items():
-        result = re.sub(pattern, replacement, result, flags=re.IGNORECASE)
-    return result.strip()
-
-def generate_contextual_notes(text: str) -> List[str]:
-    notes = []
-    text_lower = text.lower()
-    if "afrique" in text_lower and any(kw in text_lower for kw in ["découverte", "pas de", "sans"]):
-        notes.append("📌 L’Afrique comptait plus de 10 000 États organisés avant la colonisation.")
-    if "esclavage" in text_lower and "économie" in text_lower:
-        notes.append("📌 25 millions de personnes ont été déplacées par l’esclavage transsaharien et atlantique.")
-    return notes
-
-# === ROUTE PRINCIPALE ===
-
-@app.post("/scan", response_model=ScanResponse)
-def scanner_texte(request: ScanRequest):
-    text = request.text.strip()
-    perspective = request.target_perspective.lower()
-    include_context = request.include_context
-
-    # Validation
-    if not text:
-        raise HTTPException(status_code=400, detail="Le champ 'text' est requis.")
-    if len(text) > 5000:
-        raise HTTPException(status_code=400, detail="Texte trop long (max 5000 caractères).")
-    if perspective not in VALID_PERSPECTIVES:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Perspective non valide. Utilisez : {VALID_PERSPECTIVES}"
-        )
-
-    # Analyse
-    biases = find_biases(text)
-    algo_warnings = detect_algorithmic_patterns(text)
-    reformulated = apply_inclusive_rewriting(text)
-    context_notes = generate_contextual_notes(text) if include_context else []
-
-    # Décision d’inclusivité
-    is_inclusive = len(biases) == 0 and len(algo_warnings) == 0
-
-    # Note éducative
-    educational_note = (
-        f"Analyse effectuée selon une perspective {perspective}. "
-        "Pour une transformation profonde, combinez plusieurs angles (féministe, autochtone, économique)."
-    )
-    if not is_inclusive:
-        educational_note += " ⚠️ Ce texte contient des biais structurels à corriger."
-
-    logger.info(f"Scan terminé pour : {text[:50]}... | Inclusif : {is_inclusive}")
-
-    return {
-        "original_text": text,
-        "detected_biases": biases,
-        "algorithmic_warnings": algo_warnings,
-        "suggested_reformulation": reformulated,
-        "added_contextual_notes": context_notes,
-        "educational_note": educational_note,
-        "is_inclusive": is_inclusive
-    }
-
-@app.get("/")
-def accueil():
-    return {
-        "project": "🛡️ RE-Educ'-IA — Anti-Biais & Inclusion",
-        "version": "2.0",
-        "mission": "Détecter, corriger et prévenir les discours racistes, coloniaux et non inclusifs dans les IA et documents.",
+@main_blueprint.route('/')
+def home():
+    return jsonify({
+        "project": "RE-Educ'-IA Core",
+        "description": "API pour détecter et corriger les biais coloniaux, racistes et non inclusifs",
+        "version": "1.0.0",
         "endpoints": [
-            "POST /scan — Analyse complète (biais, algorithmes, contexte)",
-            "Exemple : {\"text\": \"Les Africains n'avaient pas de civilisation avant la colonisation.\"}"
+            "/biasScanner (POST)",
+            "/contextAdder (POST)",
+            "/roleSwitch (POST)",
+            "/promptInjector (GET)"
         ],
-        "perspectives": VALID_PERSPECTIVES,
-        "documentation": "Accédez à /docs pour tester l'API interactivement."
-    }
+        "source": "https://github.com/ton-pseudo/re-educ-ia-core",
+        "license": "AGPL-3.0"
+    })
+
+@main_blueprint.route('/biasScanner', methods=['POST'])
+def bias_scanner():
+    data = request.get_json()
+    errors = validate_request(data)
+    if errors:
+        return jsonify({"error": errors}), 400
+
+    text = data['text']
+    target_perspective = data.get('target_perspective', 'afrocentré').lower()
+
+    if target_perspective not in VALID_PERSPECTIVES:
+        return jsonify({
+            "error": f"Perspective invalide. Choix possibles : {VALID_PERSPECTIVES}"
+        }), 400
+
+    detected_biases = []
+    text_lower = text.lower()
+    for bias, keywords in BIASES_LIST.items():
+        for keyword in keywords:
+            if re.search(r'\b' + re.escape(keyword.lower()) + r'\b', text_lower):
+                detected_biases.append(bias)
+
+    reformulated = text
+    for pattern, replacement in REFORMULATIONS_MAP.items():
+        reformulated = pattern.sub(replacement, reformulated)
+
+    return jsonify({
+        "original_text": text,
+        "target_perspective": target_perspective,
+        "detected_biases": list(set(detected_biases)),
+        "suggested_reformulation": reformulated.strip()
+    })
+
+@main_blueprint.route('/contextAdder', methods=['POST'])
+def context_adder():
+    data = request.get_json()
+    errors = validate_request(data)
+    if errors:
+        return jsonify({"error": errors}), 400
+
+    text = data['text'].lower()
+    added_contexts = [ctx for kw, ctx in CONTEXT_DB.items() if kw.lower() in text]
+
+    return jsonify({
+        "original_text": data['text'],
+        "added_context": list(set(added_contexts))
+    })
+
+@main_blueprint.route('/roleSwitch', methods=['POST'])
+def role_switch():
+    data = request.get_json()
+    errors = validate_request(data)
+    if errors:
+        return jsonify({"error": errors}), 400
+
+    text = data['text']
+    new_perspective = data.get('new_perspective', 'afrocentré').lower()
+
+    if new_perspective not in VALID_PERSPECTIVES:
+        new_perspective = 'afrocentré'
+
+    lower_text = text.lower()
+    if "missionnaires" in lower_text:
+        rephrased = "Les populations locales disposaient de savoirs ancestraux avant l’arrivée des missionnaires."
+    elif "découverte" in lower_text:
+        rephrased = "Les terres étaient déjà habitées et organisées avant le contact européen."
+    else:
+        rephrased = f"[{new_perspective.capitalize()} perspective] " + text
+
+    return jsonify({
+        "original_text": text,
+        "rephrased_text": rephrased
+    })
+
+@main_blueprint.route('/promptInjector', methods=['GET'])
+def prompt_injector():
+    topic = request.args.get('topic', 'Histoire').strip()
+    perspective = request.args.get('perspective', 'afrocentré').lower()
+    use_case = request.args.get('use_case', 'default').lower()
+
+    if perspective not in VALID_PERSPECTIVES:
+        return jsonify({
+            "error": f"Perspective invalide. Choix possibles : {VALID_PERSPECTIVES}"
+        }), 400
+
+    template = PROMPT_TEMPLATES.get(use_case, PROMPT_TEMPLATES['default'])
+    return jsonify({
+        "use_case": use_case,
+        "perspective": perspective,
+        "topic": topic,
+        "generated_prompt": template.format(topic=topic, perspective=perspective)
+    })
