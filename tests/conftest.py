@@ -4,15 +4,9 @@ import sys
 from pathlib import Path
 
 # Ajoute le répertoire racine au PYTHONPATH
-root_dir = Path(__file__).parent.parent
-sys.path.insert(0, str(root_dir))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-try:
-    from app import create_app
-except ImportError as e:
-    print(f"❌ Erreur d'import : {e}")
-    print(f"🐍 Python path : {sys.path}")
-    raise
+from app import create_app
 
 @pytest.fixture
 def client():
