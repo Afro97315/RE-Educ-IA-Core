@@ -8,5 +8,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Utilise sh -c pour permettre l'interpolation de $PORT
+# Utilise sh -c pour interpoler $PORT
 CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:$PORT run:app"]
