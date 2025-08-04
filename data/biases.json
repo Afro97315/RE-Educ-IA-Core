@@ -1,8 +1,22 @@
-"eurocentrisme": [
-  "découverte", "découvert", "découvre", "découvrant",
-  "arriéré", "arriérés", "arriérée", "arriérées",
-  "non civilisé", "non civilisés", "non civilisée",
-  "sauvage", "sauvages",
-  "primitif", "primitifs", "primitive", "primitives"
-   "inculte",  "incultes"
-]
+{
+  "eurocentrisme": [
+    "découverte",
+    "arriéré",
+    "non civilisé",
+    "sauvage",
+    "primitif"
+  ],
+  "racisme structurel": [
+    "violence",
+    "pauvreté",
+    "instabilité",
+    "criminalité",
+    "danger"
+  ],
+  "invisibilisation": [
+    "n’a pas existé",
+    "sans histoire",
+    "sans culture",
+    "pas de civilisation"
+  ]
+}
