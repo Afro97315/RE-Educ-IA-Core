@@ -1,8 +1,11 @@
 {
-  "\\bdécouverte\\b": "prise de contact avec une région déjà peuplée et organisée",
-  "\\bmissionnaires\\b": "acteurs d'une transformation culturelle souvent unilatérale",
-  "\\barriéré\\b": "différent selon des cadres culturels et historiques propres",
-  "\\bnon civilisé\\b": "doté d’organisations sociales et politiques non occidentales",
+  "\\bdécouvr(?:e|ent|ait|ons|is|it|ait|aient)\\b": "prise de contact avec une région déjà peuplée et organisée",
+  "\\bmissionnaires?\\b": "acteurs d'une transformation culturelle souvent unilatérale",
+  "\\barriér(?:é|ée|és|ées)\\b": "différent selon des cadres culturels et historiques propres",
+  "\\bnon\\s+civilis(?:é|ée|és|ées)\\b": "doté d’organisations sociales et politiques non occidentales",
   "\\bsauvage\\b": "indigène, vivant selon des modes de vie autonomes",
-  "\\bprimitif\\b": "ancien ou traditionnel, mais sophistiqué dans son contexte"
+  "\\bprimitif\\b": "ancien ou traditionnel, mais sophistiqué dans son contexte",
+  "\\bpays\\s+sous-développé\\b": "pays du Sud structuré par les inégalités mondiales",
+  "\\btribu\\b": "peuple ou communauté autochtone",
+  "\\bconflit\\s+tribal\\b": "conflit politique complexe souvent exacerbé par la colonisation"
 }
