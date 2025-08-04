@@ -25,5 +25,5 @@ jobs:
 
       - name: Run tests
         run: |
-          export PYTHONPATH="${PYTHONPATH}:/home/runner/work/RE-Educ-IA-Core/RE-Educ-IA-Core"
+          export PYTHONPATH="${PYTHONPATH}:$(pwd)"
           python -m pytest tests/ -v --tb=short --exitfirst
