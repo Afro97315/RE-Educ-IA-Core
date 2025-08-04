@@ -38,7 +38,7 @@ PROMPT_TEMPLATES = {
 def validate_request(data, required_fields=['text']):
     errors = []
     for field in required_fields:
-        if field not in 
+        if field not in data:
             errors.append(f"Le champ '{field}' est requis.")
     return errors
 
@@ -54,7 +54,7 @@ def home():
             "/roleSwitch (POST)",
             "/promptInjector (GET)"
         ],
-        "source": "https://github.com/ton-pseudo/re-educ-ia-core",
+        "source": "https://github.com/Afro97315/RE-Educ-IA-Core",
         "license": "AGPL-3.0"
     })
 
