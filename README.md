@@ -1,5 +1,5 @@
 # 🌍 RE-Educ'-IA Core
-
+![CI](https://github.com/Afro97315/RE-Educ-IA-Core/actions/workflows/ci.yml/badge.svg)
 > Une API open source pour détecter et corriger les biais coloniaux, racistes et non inclusifs dans les textes générés par IA.
 
 ## 🎯 Objectif
