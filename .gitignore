@@ -1,11 +1,35 @@
+# === Python ===
 __pycache__/
 *.pyc
-.env
+*.pyo
+*.pyd
+*.py~
+
+# === Environnements virtuels ===
 .venv/
 venv/
+env/
+
+# === Variables d'environnement ===
+.env
+.env.local
+
+# === Tests ===
 .pytest_cache/
+.coverage
+htmlcov/
+
+# === Systèmes ===
 .DS_Store
-.git
-README.md
-.github/
-tests/
+Thumbs.db
+
+# === Logs et fichiers temporaires ===
+*.log
+logs/
+*.sqlite3
+
+# === Éditeurs ===
+.vscode/
+.idea/
+*.swp
+*.swo
