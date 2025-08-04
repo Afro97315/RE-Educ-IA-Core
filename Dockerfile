@@ -8,5 +8,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# ✅ Utilise $PORT fourni par Render
-CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "run:app"]
+# Rendre le script exécutable
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# Utiliser le script comme point d'entrée
+CMD ["/app/entrypoint.sh"]
