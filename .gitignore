@@ -1,9 +1,38 @@
+# === Python ===
 __pycache__/
+*.py[cod]
 *.pyc
-.env
+*.pyd
+*.pyo
+*.py~
+
+# === Environnements virtuels ===
 .venv/
 venv/
+env/
+ENV/
+
+# === Variables d'environnement ===
+.env
+.env.local
+
+# === Tests ===
 .pytest_cache/
-.DS_Store
-instance/
+.coverage
+htmlcov/
+
+# === Logs et fichiers temporaires ===
 *.log
+logs/
+*.sqlite3  # si tu utilises SQLite plus tard
+instance/
+
+# === Systèmes ===
+.DS_Store
+Thumbs.db
+
+# === Éditeurs ===
+.vscode/
+.idea/
+*.swp
+*.swo
