@@ -7,3 +7,18 @@ This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published
 by the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
+---
+
+### ✅ 12. `docs/API.md`
+```markdown
+# 📡 Documentation de l'API
+
+## `POST /biasScanner`
+Analyse un texte pour détecter les biais.
+
+**Body**:
+```json
+{
+  "text": "La découverte de l'Afrique",
+  "target_perspective": "afrocentré"
+}
