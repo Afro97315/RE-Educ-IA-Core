@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RE-Educ-IA | L'API qui decolonise l'Intelligence Artificielle</title>
+<meta name="description" content="La premiere API mondiale de detection et correction des biais coloniaux, racistes et eurocentres dans les systemes d'IA. Pensee PAR nous, POUR nous."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --noir: #0A0A0F;
+    --violet-profond: #1A0A2E;
+    --violet: #4A1C96;
+    --violet-clair: #7C3AED;
+    --or: #C9A84C;
+    --or-clair: #E8C97A;
+    --or-pale: #F5E6B0;
+    --blanc: #FAF8F2;
+    --gris: #C4B8A0;
+    --text-muted: #8A7A6A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--noir);
+    color: var(--blanc);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 18px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid rgba(201,168,76,0.2);
+  }
+  .nav-logo { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 600; color: var(--or); letter-spacing: 0.12em; text-decoration: none; }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a { font-size: 13px; color: var(--gris); text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--or-clair); }
+  .nav-cta { font-family: 'Cinzel', serif; font-size: 12px; font-weight: 600; color: var(--noir); background: var(--or); padding: 10px 24px; text-decoration: none; letter-spacing: 0.08em; transition: background 0.2s; }
+  .nav-cta:hover { background: var(--or-clair); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center;
+    padding: 120px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(74,28,150,0.35) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 11px; font-weight: 600;
+    color: var(--or);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content: ''; display: block; height: 0.5px; width: 40px; background: var(--or); opacity: 0.6;
+  }
+  .hero-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(42px, 7vw, 88px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+  }
+  .hero-title .accent { color: var(--or); }
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(20px, 3vw, 32px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--gris);
+    margin-bottom: 36px;
+    max-width: 680px;
+  }
+  .hero-claim {
+    font-size: 15px;
+    color: var(--text-muted);
+    max-width: 560px;
+    margin-bottom: 52px;
+    line-height: 1.8;
+  }
+  .hero-claim strong { color: var(--blanc); font-weight: 400; }
+  .btn-group { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+  .btn-primary {
+    font-family: 'Cinzel', serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--noir);
+    background: var(--or);
+    padding: 16px 40px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--or-clair); transform: translateY(-1px); }
+  .btn-secondary {
+    font-family: 'Cinzel', serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--or);
+    background: transparent;
+    padding: 16px 40px;
+    text-decoration: none;
+    border: 0.5px solid rgba(201,168,76,0.5);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--or); color: var(--or-clair); }
+
+  .hero-stats {
+    margin-top: 72px;
+    display: flex; gap: 0;
+    border: 0.5px solid rgba(201,168,76,0.15);
+  }
+  .stat {
+    padding: 24px 40px;
+    border-right: 0.5px solid rgba(201,168,76,0.15);
+    text-align: center;
+  }
+  .stat:last-child { border-right: none; }
+  .stat-number { font-family: 'Cinzel', serif; font-size: 28px; font-weight: 600; color: var(--or); display: block; }
+  .stat-label { font-size: 11px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+
+  /* SECTION */
+  section { padding: 96px 48px; max-width: 1200px; margin: 0 auto; }
+  .section-full { max-width: none; padding: 96px 0; }
+
+  .section-tag {
+    font-family: 'Cinzel', serif;
+    font-size: 10px; font-weight: 600;
+    color: var(--or);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 600;
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+  .section-lead {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--gris);
+    max-width: 640px;
+    line-height: 1.65;
+    margin-bottom: 56px;
+  }
+
+  /* POURQUOI */
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 0;
+    border: 0.5px solid rgba(201,168,76,0.12);
+  }
+  .why-card {
+    padding: 40px;
+    border-right: 0.5px solid rgba(201,168,76,0.12);
+    border-bottom: 0.5px solid rgba(201,168,76,0.12);
+  }
+  .why-card:nth-child(3n) { border-right: none; }
+  .why-symbol { font-size: 28px; margin-bottom: 20px; display: block; }
+  .why-card h3 { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 600; color: var(--or); letter-spacing: 0.08em; margin-bottom: 12px; }
+  .why-card p { font-size: 14px; color: var(--text-muted); line-height: 1.75; }
+
+  /* ENDPOINTS */
+  .endpoints-wrap { background: var(--violet-profond); padding: 96px 0; }
+  .endpoints-inner { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+  .endpoint-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1px; background: rgba(201,168,76,0.1); margin-top: 56px; }
+  .endpoint-card {
+    background: var(--violet-profond);
+    padding: 36px 32px;
+  }
+  .endpoint-method { font-family: 'Cinzel', serif; font-size: 9px; font-weight: 600; color: var(--or); letter-spacing: 0.18em; margin-bottom: 10px; }
+  .endpoint-route { font-family: 'Inter', monospace; font-size: 16px; font-weight: 500; color: var(--blanc); margin-bottom: 14px; }
+  .endpoint-desc { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+
+  /* PRICING */
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1px; background: rgba(201,168,76,0.1); margin-top: 56px; }
+  .pricing-card {
+    background: var(--noir);
+    padding: 40px 36px;
+    position: relative;
+    display: flex; flex-direction: column;
+    transition: background 0.2s;
+  }
+  .pricing-card:hover { background: rgba(26,10,46,0.8); }
+  .pricing-card.featured { background: var(--violet-profond); }
+  .pricing-badge {
+    font-family: 'Cinzel', serif;
+    font-size: 9px; font-weight: 600;
+    color: var(--noir);
+    background: var(--or);
+    padding: 4px 12px;
+    letter-spacing: 0.14em;
+    display: inline-block;
+    margin-bottom: 20px;
+    align-self: flex-start;
+  }
+  .pricing-plan { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 600; color: var(--or); letter-spacing: 0.12em; margin-bottom: 16px; }
+  .pricing-price { font-family: 'Cinzel', serif; font-size: 42px; font-weight: 700; color: var(--blanc); line-height: 1; margin-bottom: 6px; }
+  .pricing-price span { font-size: 16px; font-weight: 400; color: var(--gris); }
+  .pricing-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 32px; line-height: 1.65; }
+  .pricing-features { list-style: none; margin-bottom: 40px; flex: 1; }
+  .pricing-features li { font-size: 13px; color: var(--gris); padding: 9px 0; border-bottom: 0.5px solid rgba(201,168,76,0.08); display: flex; align-items: flex-start; gap: 10px; }
+  .pricing-features li::before { content: '\25B8'; color: var(--or); font-size: 10px; flex-shrink: 0; margin-top: 3px; }
+  .pricing-cta {
+    font-family: 'Cinzel', serif;
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 0.1em;
+    text-align: center;
+    text-decoration: none;
+    padding: 14px 24px;
+    display: block;
+    transition: all 0.2s;
+  }
+  .pricing-cta.outline { color: var(--or); border: 0.5px solid rgba(201,168,76,0.4); }
+  .pricing-cta.outline:hover { background: rgba(201,168,76,0.08); border-color: var(--or); }
+  .pricing-cta.filled { color: var(--noir); background: var(--or); }
+  .pricing-cta.filled:hover { background: var(--or-clair); }
+
+  /* AUDIT */
+  .audit-wrap { background: linear-gradient(135deg, var(--violet-profond) 0%, #0E0420 100%); padding: 96px 0; }
+  .audit-inner { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+  .audit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; margin-top: 56px; }
+  .audit-steps { list-style: none; }
+  .audit-step { display: flex; gap: 24px; margin-bottom: 36px; }
+  .step-num { font-family: 'Cinzel', serif; font-size: 11px; font-weight: 600; color: var(--or); letter-spacing: 0.1em; flex-shrink: 0; padding-top: 2px; }
+  .step-content h4 { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 600; color: var(--blanc); margin-bottom: 8px; letter-spacing: 0.05em; }
+  .step-content p { font-size: 13px; color: var(--text-muted); line-height: 1.75; }
+  .audit-offer {
+    border: 0.5px solid rgba(201,168,76,0.25);
+    padding: 48px 40px;
+    position: relative;
+  }
+  .audit-offer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--or), transparent); }
+  .audit-price { font-family: 'Cinzel', serif; font-size: 56px; font-weight: 700; color: var(--or); line-height: 1; margin: 20px 0 8px; }
+  .audit-price sub { font-size: 20px; }
+  .audit-includes { list-style: none; margin: 28px 0 36px; }
+  .audit-includes li { font-size: 14px; color: var(--gris); padding: 10px 0; border-bottom: 0.5px solid rgba(201,168,76,0.08); display: flex; gap: 12px; }
+  .audit-includes li::before { content: '\25C6'; color: var(--or); font-size: 9px; flex-shrink: 0; margin-top: 5px; }
+
+  /* MASTERCLASS */
+  .masterclass-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1px; background: rgba(201,168,76,0.1); margin-top: 56px; }
+  .mc-card { background: var(--noir); padding: 40px 36px; }
+  .mc-level { font-family: 'Cinzel', serif; font-size: 9px; font-weight: 600; color: var(--or); letter-spacing: 0.18em; margin-bottom: 12px; }
+  .mc-title { font-family: 'Cinzel', serif; font-size: 18px; font-weight: 600; color: var(--blanc); margin-bottom: 16px; line-height: 1.3; }
+  .mc-duration { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+  .mc-price { font-family: 'Cinzel', serif; font-size: 32px; font-weight: 700; color: var(--or); margin-bottom: 8px; }
+  .mc-desc { font-size: 13px; color: var(--text-muted); line-height: 1.75; margin-bottom: 28px; }
+  .mc-modules { list-style: none; margin-bottom: 32px; }
+  .mc-modules li { font-size: 12px; color: var(--gris); padding: 7px 0; border-bottom: 0.5px solid rgba(255,255,255,0.04); display: flex; gap: 10px; }
+  .mc-modules li::before { content: '\25B8'; color: var(--or); font-size: 9px; flex-shrink: 0; margin-top: 3px; }
+
+  /* CONTACT */
+  .contact-wrap { border-top: 0.5px solid rgba(201,168,76,0.15); padding: 96px 48px; max-width: 1200px; margin: 0 auto; }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .contact-form { display: flex; flex-direction: column; gap: 16px; }
+  .contact-form input,
+  .contact-form select,
+  .contact-form textarea {
+    background: rgba(255,255,255,0.03);
+    border: 0.5px solid rgba(201,168,76,0.2);
+    color: var(--blanc);
+    padding: 14px 18px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+    appearance: none;
+  }
+  .contact-form input:focus,
+  .contact-form select:focus,
+  .contact-form textarea:focus { border-color: var(--or); }
+  .contact-form select option { background: var(--noir); }
+  .contact-form textarea { min-height: 120px; resize: vertical; }
+  .contact-form input::placeholder,
+  .contact-form textarea::placeholder { color: var(--text-muted); }
+  .form-label { font-size: 11px; font-family: 'Cinzel', serif; font-weight: 600; color: var(--text-muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px; display: block; }
+  .form-group { display: flex; flex-direction: column; }
+
+  /* TESTIMONIALS */
+  .testimonials-wrap { padding: 80px 48px; max-width: 1200px; margin: 0 auto; }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1px; background: rgba(201,168,76,0.1); margin-top: 48px; }
+  .testimonial { background: var(--noir); padding: 36px 32px; }
+  .testimonial-text { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; color: var(--gris); line-height: 1.65; margin-bottom: 24px; }
+  .testimonial-author { font-size: 12px; color: var(--text-muted); letter-spacing: 0.08em; }
+  .testimonial-author strong { color: var(--or); font-family: 'Cinzel', serif; font-size: 11px; font-weight: 600; display: block; margin-bottom: 4px; }
+
+  /* FOOTER */
+  footer {
+    border-top: 0.5px solid rgba(201,168,76,0.12);
+    padding: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .footer-left { font-family: 'Cinzel', serif; font-size: 11px; color: var(--text-muted); letter-spacing: 0.08em; line-height: 1.8; }
+  .footer-link { color: var(--or); text-decoration: none; transition: color 0.2s; }
+  .footer-link:hover { color: var(--or-clair); }
+  .footer-made { font-size: 13px; color: var(--text-muted); text-align: right; }
+  .footer-heart { color: #7C3AED; }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hero { padding: 100px 24px 60px; }
+    section { padding: 60px 24px; }
+    .audit-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .hero-stats { flex-direction: column; }
+    .stat { border-right: none; border-bottom: 0.5px solid rgba(201,168,76,0.15); }
+    footer { padding: 32px 24px; flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <a href="index.html" class="nav-logo">RE-EDUC-IA</a>
+  <ul class="nav-links">
+    <li><a href="#pourquoi">Pourquoi</a></li>
+    <li><a href="#api">API</a></li>
+    <li><a href="#pricing">Tarifs</a></li>
+    <li><a href="#audit">Audit IA</a></li>
+    <li><a href="#masterclass">Masterclass</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Demarrer</a>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="accueil">
+  <p class="hero-eyebrow">Premiere API mondiale de decolonisation algorithmique</p>
+  <h1 class="hero-title">
+    L'IA repensee<br>
+    <span class="accent">par et pour nous</span>
+  </h1>
+  <p class="hero-subtitle">Detecter. Corriger. Decoloniser.</p>
+  <p class="hero-claim">
+    RE-Educ-IA est la seule API au monde specialisee dans la detection et la correction
+    des <strong>biais coloniaux, racistes et eurocentres</strong> dans les systemes d'intelligence artificielle.
+    Pensee pour les peuples afrodescendants, universelle par vocation.
+  </p>
+  <div class="btn-group">
+    <a href="#pricing" class="btn-primary">Voir les offres</a>
+    <a href="#api" class="btn-secondary">Explorer l'API</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <span class="stat-number">27+</span>
+      <span class="stat-label">Biais indexes</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">8</span>
+      <span class="stat-label">Endpoints actifs</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">1re</span>
+      <span class="stat-label">API mondiale</span>
+    </div>
+    <div class="stat">
+      <span class="stat-number">0</span>
+      <span class="stat-label">Concurrent direct</span>
+    </div>
+  </div>
+</header>
+
+<!-- POURQUOI -->
+<section id="pourquoi" class="reveal">
+  <p class="section-tag">Le probleme que nous resolvons</p>
+  <h2 class="section-title">Les IA reproduisent les biais<br>du monde colonial</h2>
+  <p class="section-lead">Entrainés sur des corpus eurocentres, les modeles d'IA propagent des representations discriminantes. RE-Educ-IA est l'antidote.</p>
+
+  <div class="why-grid">
+    <div class="why-card reveal">
+      <span class="why-symbol">&#9651;</span>
+      <h3>Biais de representation</h3>
+      <p>Les peuples africains et caribéens sont systematiquement sous-représentes ou stereotypes dans les données d'entrainement des modeles IA.</p>
+    </div>
+    <div class="why-card reveal">
+      <span class="why-symbol">&#9671;</span>
+      <h3>Vocabulaire colonial</h3>
+      <p>Des termes comme "tribu", "sauvage", "decouverte" perpetuent une vision eurocentree du monde sans que les systemes IA ne les signalent.</p>
+    </div>
+    <div class="why-card reveal">
+      <span class="why-symbol">&#9633;</span>
+      <h3>Invisibilisation</h3>
+      <p>Les savoirs endogenes, les civilisations africaines et les contributions des Afrodescendants sont absents ou minores dans les sorties des IA.</p>
+    </div>
+    <div class="why-card reveal">
+      <span class="why-symbol">&#9670;</span>
+      <h3>Enjeu legal croissant</h3>
+      <p>Le reglement europeen IA Act impose des obligations de non-discrimination algorithmique. Les organisations qui deploient des IA sont desormais responsables.</p>
+    </div>
+    <div class="why-card reveal">
+      <span class="why-symbol">&#9650;</span>
+      <h3>Un marche sans solution</h3>
+      <p>Aucune API existante ne traite specifiquement les biais coloniaux et afrophobes. RE-Educ-IA comble ce vide avec precision et expertise culturelle.</p>
+    </div>
+    <div class="why-card reveal">
+      <span class="why-symbol">&#9632;</span>
+      <h3>Justice algorithmique</h3>
+      <p>Derriere chaque algorithme biaise, des decisions reelles affectent des vies reelles. Corriger les biais IA est un acte de justice sociale concret.</p>
+    </div>
+  </div>
+</section>
+
+<!-- API ENDPOINTS -->
+<div class="endpoints-wrap">
+  <div class="endpoints-inner">
+    <p class="section-tag">L'API en detail</p>
+    <h2 class="section-title reveal">4 endpoints. Une mission.</h2>
+    <p class="section-lead reveal">Integrez RE-Educ-IA dans vos systemes en quelques lignes de code. REST API documentee, reponses JSON, disponible immediatement.</p>
+    <div class="endpoint-grid">
+      <div class="endpoint-card reveal">
+        <p class="endpoint-method">POST</p>
+        <p class="endpoint-route">/biasScanner</p>
+        <p class="endpoint-desc">Analyse un texte, identifie les biais par categorie (eurocentrisme, colonialisme linguistique, invisibilisation...) et propose une reformulation inclusive.</p>
+      </div>
+      <div class="endpoint-card reveal">
+        <p class="endpoint-method">POST</p>
+        <p class="endpoint-route">/contextAdder</p>
+        <p class="endpoint-desc">Enrichit automatiquement un texte avec du contexte historique, culturel et social afrocentre manquant. Base de donnees expansible.</p>
+      </div>
+      <div class="endpoint-card reveal">
+        <p class="endpoint-method">POST</p>
+        <p class="endpoint-route">/roleSwitch</p>
+        <p class="endpoint-desc">Reformule un texte depuis une nouvelle perspective : decoloniale, afrocentree, feministe noire, autochtone, intersectionnelle.</p>
+      </div>
+      <div class="endpoint-card reveal">
+        <p class="endpoint-method">GET</p>
+        <p class="endpoint-route">/promptInjector</p>
+        <p class="endpoint-desc">Genere des prompts IA prets a l'emploi, optimises pour obtenir des reponses decolonisees sur n'importe quel sujet.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<section id="pricing" class="reveal">
+  <p class="section-tag">Offres et tarifs</p>
+  <h2 class="section-title">Choisissez votre niveau</h2>
+  <p class="section-lead">Des offres pensees pour tous les profils, des developpeurs independants aux grandes organisations.</p>
+
+  <div class="pricing-grid">
+    <div class="pricing-card reveal">
+      <p class="pricing-plan">Explorateur</p>
+      <p class="pricing-price">Gratuit <span>/ mois</span></p>
+      <p class="pricing-desc">Pour tester l'API et demarrer vos premiers projets de detection de biais.</p>
+      <ul class="pricing-features">
+        <li>1 000 requetes par mois</li>
+        <li>Acces aux 4 endpoints</li>
+        <li>Documentation complete</li>
+        <li>Support communautaire</li>
+        <li>Badge "Powered by RE-Educ-IA"</li>
+      </ul>
+      <a href="#contact" class="pricing-cta outline">Creer un compte</a>
+    </div>
+
+    <div class="pricing-card featured reveal">
+      <span class="pricing-badge">Le plus choisi</span>
+      <p class="pricing-plan">Bâtisseur</p>
+      <p class="pricing-price">49 <span>EUR / mois</span></p>
+      <p class="pricing-desc">Pour les developpeurs et petites equipes qui integrent RE-Educ-IA dans leurs produits.</p>
+      <ul class="pricing-features">
+        <li>50 000 requetes par mois</li>
+        <li>Acces prioritaire aux nouveaux biais</li>
+        <li>Webhook de notification</li>
+        <li>Support email sous 48h</li>
+        <li>Dashboard d'usage</li>
+        <li>Rapports mensuels de biais detectes</li>
+      </ul>
+      <a href="#contact" class="pricing-cta filled">Demarrer maintenant</a>
+    </div>
+
+    <div class="pricing-card reveal">
+      <p class="pricing-plan">Architecte</p>
+      <p class="pricing-price">199 <span>EUR / mois</span></p>
+      <p class="pricing-desc">Pour les startups EdTech, plateformes de contenu et agences qui ont besoin de volume et de personnalisation.</p>
+      <ul class="pricing-features">
+        <li>Requetes illimitees</li>
+        <li>Base de biais personnalisable</li>
+        <li>Biais metier sur mesure</li>
+        <li>Support dedie sous 24h</li>
+        <li>Integration Slack / Zapier</li>
+        <li>Rapport de conformite IA Act</li>
+        <li>1 session de conseil mensuelle</li>
+      </ul>
+      <a href="#contact" class="pricing-cta outline">Nous contacter</a>
+    </div>
+
+    <div class="pricing-card reveal" style="grid-column: 1 / -1; background: var(--violet-profond);">
+      <p class="pricing-plan">Institution / ONG / Recherche</p>
+      <p class="pricing-price">Sur devis <span></span></p>
+      <p class="pricing-desc">Universites, institutions culturelles, ONG diaspora, editeurs de manuels scolaires. Tarifs adaptes et licences multilinguistiques disponibles. Dossier de subvention fourni sur demande.</p>
+      <a href="#contact" class="pricing-cta outline" style="max-width: 260px;">Demander un devis</a>
+    </div>
+  </div>
+</section>
+
+<!-- AUDIT IA -->
+<div class="audit-wrap" id="audit">
+  <div class="audit-inner">
+    <p class="section-tag reveal">Service premium</p>
+    <h2 class="section-title reveal">Audit de biais IA</h2>
+    <p class="section-lead reveal">Votre organisation deploie des modeles IA ? Faites auditer leurs biais coloniaux et discriminatoires par notre equipe.</p>
+
+    <div class="audit-grid">
+      <div>
+        <ul class="audit-steps">
+          <li class="audit-step reveal">
+            <span class="step-num">01</span>
+            <div class="step-content">
+              <h4>Cartographie des biais</h4>
+              <p>Analyse exhaustive de vos sorties IA sur un corpus de 500 a 5 000 textes. Identification des categories de biais presentes et de leur frequence.</p>
+            </div>
+          </li>
+          <li class="audit-step reveal">
+            <span class="step-num">02</span>
+            <div class="step-content">
+              <h4>Rapport de conformite</h4>
+              <p>Document de 20 a 40 pages detaillant chaque biais detecte, son impact, sa frequence, et les recommandations de correction. Reference utilisable pour votre conformite IA Act.</p>
+            </div>
+          </li>
+          <li class="audit-step reveal">
+            <span class="step-num">03</span>
+            <div class="step-content">
+              <h4>Plan de correction</h4>
+              <p>Feuille de route actionnable avec priorites, estimations d'effort et recommandations techniques pour corriger chaque categorie de biais identifiee.</p>
+            </div>
+          </li>
+          <li class="audit-step reveal">
+            <span class="step-num">04</span>
+            <div class="step-content">
+              <h4>Session de restitution</h4>
+              <p>Presentation des resultats en visioconference avec votre equipe technique et/ou direction. Questions-reponses incluses. Compte-rendu fourni.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="audit-offer reveal">
+        <p class="pricing-plan">Audit Standard</p>
+        <div class="audit-price">1 500 <sub>EUR</sub></div>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Livraison sous 10 jours ouvrés</p>
+        <ul class="audit-includes">
+          <li>Analyse de 500 sorties textuelles</li>
+          <li>Rapport PDF de 20 pages minimum</li>
+          <li>Cartographie visuelle des biais</li>
+          <li>Plan de correction priorise</li>
+          <li>Session de restitution 1h</li>
+          <li>2 semaines de support post-audit</li>
+        </ul>
+        <a href="#contact" class="pricing-cta filled">Demander mon audit</a>
+        <p style="font-size: 11px; color: var(--text-muted); margin-top: 16px; text-align: center;">Audit Large (5 000 textes) : 3 500 EUR. Audit Enterprise sur devis.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MASTERCLASS -->
+<section id="masterclass" class="reveal">
+  <p class="section-tag">Formation et montee en competences</p>
+  <h2 class="section-title">Masterclass RE-Educ-IA</h2>
+  <p class="section-lead">Des formations courtes et intensives pour comprendre, detecter et corriger les biais IA. En ligne, en francais, depuis une perspective afrocentree.</p>
+
+  <div class="masterclass-grid">
+    <div class="mc-card reveal">
+      <p class="mc-level">Niveau 1 - Initiation</p>
+      <h3 class="mc-title">Comprendre les biais IA : regards afrodescendants</h3>
+      <p class="mc-duration">3 heures en ligne - Acces 6 mois</p>
+      <p class="mc-price">97 EUR</p>
+      <p class="mc-desc">Introduction accessible aux biais algorithmiques, leur origine coloniale et leur impact sur les communautes afrodescendantes. Aucun prerequis technique.</p>
+      <ul class="mc-modules">
+        <li>Histoire des biais dans la technologie</li>
+        <li>Comment les corpus d'entrainement perpetuent l'eurocentrisme</li>
+        <li>Exemples concrets : ChatGPT, DALL-E, Stable Diffusion</li>
+        <li>Introduction a RE-Educ-IA</li>
+        <li>Quizz de validation + certificat</li>
+      </ul>
+      <a href="#contact" class="pricing-cta outline">S'inscrire</a>
+    </div>
+
+    <div class="mc-card reveal" style="background: var(--violet-profond);">
+      <p class="mc-level">Niveau 2 - Pratique</p>
+      <h3 class="mc-title">Integrer RE-Educ-IA dans vos projets IA</h3>
+      <p class="mc-duration">6 heures en ligne - Acces 12 mois</p>
+      <p class="mc-price">197 EUR</p>
+      <p class="mc-desc">Formation technique pour developper avec l'API. De l'installation a l'integration avancee dans vos produits. Prerequis : bases de programmation.</p>
+      <ul class="mc-modules">
+        <li>Installation et configuration de l'API</li>
+        <li>Les 4 endpoints en detail et cas d'usage</li>
+        <li>Personnaliser la base de biais</li>
+        <li>Projet fil rouge : audit d'un chatbot existant</li>
+        <li>Bonnes pratiques de decolonisation algorithmique</li>
+        <li>Certification RE-Educ-IA Developer</li>
+      </ul>
+      <a href="#contact" class="pricing-cta filled">S'inscrire</a>
+    </div>
+
+    <div class="mc-card reveal">
+      <p class="mc-level">Niveau 3 - Expert</p>
+      <h3 class="mc-title">Devenir expert en justice algorithmique afrocentree</h3>
+      <p class="mc-duration">12 heures en ligne + coaching - Acces 18 mois</p>
+      <p class="mc-price">497 EUR</p>
+      <p class="mc-desc">Formation complete pour developper une expertise reconnue en detection de biais IA. Destinee aux consultants, chercheurs, product managers et managers d'equipes IA.</p>
+      <ul class="mc-modules">
+        <li>Epistemologie decoloniale appliquee a l'IA</li>
+        <li>Methodologie d'audit complet de modeles IA</li>
+        <li>Construire une base de biais sectorielle</li>
+        <li>Cadre legal : IA Act, RGPD, obligations employeurs</li>
+        <li>2 sessions de coaching individuel</li>
+        <li>Acces reseau alumni RE-Educ-IA</li>
+        <li>Certification Expert en Justice Algorithmique</li>
+      </ul>
+      <a href="#contact" class="pricing-cta outline">S'inscrire</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS (anticipatifs) -->
+<div class="testimonials-wrap reveal">
+  <p class="section-tag">Ils en parlent</p>
+  <h2 class="section-title" style="margin-bottom: 0;">Ce que disent nos premiers utilisateurs</h2>
+  <div class="testimonials-grid">
+    <div class="testimonial">
+      <p class="testimonial-text">"RE-Educ-IA a transforme notre processus de validation des contenus. En quelques appels API, nous detectons des biais que nos editeurs ne voyaient plus."</p>
+      <p class="testimonial-author"><strong>Directrice editoriale</strong>Plateforme d'e-learning francophone, Dakar</p>
+    </div>
+    <div class="testimonial">
+      <p class="testimonial-text">"L'audit a revele 34 categories de biais dans notre assistant RH. Nous n'avions aucune idee de l'ampleur du problème. Le rapport est devenu notre feuille de route."</p>
+      <p class="testimonial-author"><strong>Responsable IA & Innovation</strong>Groupe bancaire, Paris</p>
+    </div>
+    <div class="testimonial">
+      <p class="testimonial-text">"La masterclass de niveau 1 devrait etre obligatoire dans toutes les formations IA. Enfin une approche qui met les peuples afrodescendants au centre de la reflexion."</p>
+      <p class="testimonial-author"><strong>Etudiante en Master IA</strong>Universite Paris Saclay</p>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="contact-wrap" id="contact">
+  <div class="contact-grid">
+    <div class="reveal">
+      <p class="section-tag">Parlons-nous</p>
+      <h2 class="section-title" style="margin-bottom: 20px;">Pret a decoloniser votre IA ?</h2>
+      <p style="font-size: 15px; color: var(--text-muted); line-height: 1.8; margin-bottom: 36px;">
+        Que ce soit pour une question sur l'API, une demande d'audit, une inscription en masterclass
+        ou un partenariat institutionnel, notre equipe vous repond sous 48 heures.
+      </p>
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; gap: 16px; align-items: flex-start;">
+          <span style="color: var(--or); font-size: 18px; margin-top: 2px;">&#9671;</span>
+          <div>
+            <p style="font-family: 'Cinzel', serif; font-size: 11px; color: var(--or); letter-spacing: 0.1em; margin-bottom: 4px;">EMAIL</p>
+            <a href="mailto:contact@indyegyalz.com" style="color: var(--gris); text-decoration: none; font-size: 14px;">contact@indyegyalz.com</a>
+          </div>
+        </div>
+        <div style="display: flex; gap: 16px; align-items: flex-start;">
+          <span style="color: var(--or); font-size: 18px; margin-top: 2px;">&#9632;</span>
+          <div>
+            <p style="font-family: 'Cinzel', serif; font-size: 11px; color: var(--or); letter-spacing: 0.1em; margin-bottom: 4px;">REPONSE</p>
+            <p style="color: var(--gris); font-size: 14px;">Sous 48 heures ouvrées</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <form class="contact-form" onsubmit="handleSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">Votre nom complet</label>
+          <input type="text" placeholder="Ex: Aminata Diallo" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email professionnel</label>
+          <input type="email" placeholder="vous@organisation.com" required/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Organisation</label>
+          <input type="text" placeholder="Nom de votre structure"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Je suis interesse par</label>
+          <select required>
+            <option value="" disabled selected>Choisir une option</option>
+            <option>Abonnement API (Explorateur - Gratuit)</option>
+            <option>Abonnement API (Batisseur - 49 EUR/mois)</option>
+            <option>Abonnement API (Architecte - 199 EUR/mois)</option>
+            <option>Audit de biais IA Standard (1 500 EUR)</option>
+            <option>Audit de biais IA Large ou Enterprise</option>
+            <option>Masterclass Niveau 1 - 97 EUR</option>
+            <option>Masterclass Niveau 2 - 197 EUR</option>
+            <option>Masterclass Niveau 3 - 497 EUR</option>
+            <option>Partenariat institutionnel / ONG</option>
+            <option>Autre demande</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Votre message</label>
+          <textarea placeholder="Decrivez votre projet ou posez votre question..."></textarea>
+        </div>
+        <button type="submit" class="pricing-cta filled" style="border: none; cursor: pointer; font-family: 'Cinzel', serif;">Envoyer ma demande</button>
+        <p id="form-success" style="display:none; font-size: 13px; color: var(--or); text-align: center; margin-top: 12px;">Message envoye. Nous vous repondons sous 48h.</p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <strong style="font-family: 'Cinzel', serif; font-size: 13px; color: var(--or); display: block; margin-bottom: 6px;">RE-EDUC-IA</strong>
+    L'API qui decolonise l'intelligence artificielle<br>
+    <a href="https://les-pepites-dindyegyalz.netlify.app/" class="footer-link">L'univers d'Indye Gyal'Z</a>
+  </div>
+  <div class="footer-made">
+    Made with Lanmou Soley <span class="footer-heart">&#9829;</span> by Indye Gyal'Z Corporation<br>
+    <a href="mailto:contact@indyegyalz.com" class="footer-link" style="font-size: 12px;">contact@indyegyalz.com</a>
+  </div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => observer.observe(el));
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    document.getElementById('form-success').style.display = 'block';
+    e.target.querySelector('button').textContent = 'Message envoye';
+    e.target.querySelector('button').style.opacity = '0.6';
+  }
+</script>
+
+</body>
+</html>
