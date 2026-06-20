@@ -1,0 +1,35 @@
+# render.yaml
+# ---------------------------------------------------------------
+# CONFIGURATION DE DEPLOIEMENT AUTOMATIQUE SUR RENDER.COM
+#
+# Ce fichier permet a Render de deployer l'API automatiquement
+# a chaque push sur GitHub (Infrastructure as Code).
+#
+# Pour l'utiliser :
+#   1. Connectez votre repo GitHub a Render
+#   2. Render detecte ce fichier et configure le service seul
+#   3. Definissez SECRET_KEY dans le dashboard Render > Environment
+# ---------------------------------------------------------------
+
+services:
+  - type: web
+    name: re-educ-ia-core
+    runtime: python
+    region: frankfurt          # Region Europe (plus proche des utilisateurs FR/Caraibes)
+    plan: free                 # Plan gratuit Render (suffisant pour demarrer)
+
+    # Commande d'installation des dependances
+    buildCommand: pip install -r requirements.txt
+
+    # Commande de demarrage (equivalent au Procfile)
+    startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 2 --timeout 60 run:app
+
+    # Variables d'environnement injectees automatiquement
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.10.0"
+      - key: SECRET_KEY
+        generateValue: true    # Render genere une valeur secrete aleatoire automatiquement
+
+    # Verification que l'API est bien en ligne (health check)
+    healthCheckPath: /

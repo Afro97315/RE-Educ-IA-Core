@@ -1,8 +1,25 @@
+# docker-compose.yml
+# ---------------------------------------------------------------
+# CONFIGURATION DOCKER COMPOSE POUR LE DEVELOPPEMENT LOCAL
+#
+# Lance l'API dans un conteneur Docker en local :
+#   docker-compose up --build
+#
+# L'API sera accessible sur : http://localhost:10000
+# ---------------------------------------------------------------
+
 version: '3.8'
+
 services:
   reeducia:
     build: .
     ports:
-      - "10000:10000"
+      - "10000:10000"    # port_local:port_conteneur
     environment:
       - PORT=10000
+      - SECRET_KEY=dev-secret-key-not-for-production
+      - LOG_LEVEL=DEBUG
+    volumes:
+      # Monte le code local dans le conteneur pour le hot-reload en dev
+      - .:/app
+    restart: unless-stopped
