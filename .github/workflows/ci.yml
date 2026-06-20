@@ -1,20 +1,57 @@
-name: CI
+# .github/workflows/ci.yml
+# ---------------------------------------------------------------
+# PIPELINE CI/CD GITHUB ACTIONS
+#
+# Ce fichier est execute automatiquement par GitHub a chaque push
+# ou pull request. Il installe les dependances et lance les tests.
+#
+# Si tous les tests passent = badge vert = code pret pour production.
+# ---------------------------------------------------------------
 
-on: [push, pull_request]
+name: CI - Tests et Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11']   # tester sur 2 versions Python
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
+      # Etape 1 : recuperer le code depuis GitHub
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      # Etape 2 : installer Python
+      - name: Installation de Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
-      - name: Install dependencies
-        run: |
-          pip install --no-cache-dir -r requirements.txt
-      - name: Run tests
+          python-version: ${{ matrix.python-version }}
+
+      # Etape 3 : installer les dependances
+      - name: Installation des dependances
+        run: pip install --no-cache-dir -r requirements.txt
+
+      # Etape 4 : diagnostic pre-test
+      - name: Diagnostic de l'application
+        run: python diagnose.py
+
+      # Etape 5 : lancer les tests pytest
+      - name: Execution des tests
         run: |
           export PYTHONPATH="${PYTHONPATH}:$(pwd)"
           python -m pytest tests/ -v --tb=short
+
+  # Job optionnel : verifier que Docker build fonctionne
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t re-educ-ia-core:test .
