@@ -1,22 +1,61 @@
 {
   "eurocentrisme": [
     "découverte",
+    "decouverte",
+    "découvrir",
+    "decouvrir",
     "arriéré",
+    "arriere",
     "non civilisé",
+    "non civilise",
     "sauvage",
-    "primitif"
+    "primitif",
+    "barbare",
+    "tribu",
+    "sorcellerie",
+    "monde nouveau",
+    "decouvert",
+    "découvert"
   ],
   "racisme structurel": [
     "violence",
     "pauvreté",
+    "pauvrete",
     "instabilité",
+    "instabilite",
     "criminalité",
-    "danger"
+    "criminalite",
+    "danger",
+    "ghetto",
+    "immigré problème",
+    "immigre probleme"
   ],
   "invisibilisation": [
-    "n’a pas existé",
+    "n'a pas existé",
     "sans histoire",
     "sans culture",
-    "pas de civilisation"
+    "pas de civilisation",
+    "aucune civilisation",
+    "sans écriture",
+    "sans ecriture"
+  ],
+  "colonialisme linguistique": [
+    "missionnaire",
+    "missionnaires",
+    "apporter la lumière",
+    "apporter la lumiere",
+    "civiliser",
+    "evangeliser",
+    "convertir les indigènes",
+    "convertir les indigenes"
+  ],
+  "paternalisme": [
+    "aider l'afrique",
+    "aider l'africa",
+    "développement de l'afrique",
+    "developpement de l'afrique",
+    "donner une chance",
+    "élever leur niveau",
+    "elever leur niveau"
   ]
 }

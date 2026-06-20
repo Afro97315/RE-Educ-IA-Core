@@ -1,11 +1,13 @@
 {
-  "\\bdécouvr(?:e|ent|ait|ons|is|it|ait|aient)\\b": "prise de contact avec une région déjà peuplée et organisée",
-  "\\bmissionnaires?\\b": "acteurs d'une transformation culturelle souvent unilatérale",
-  "\\barriér(?:é|ée|és|ées)\\b": "différent selon des cadres culturels et historiques propres",
-  "\\bnon\\s+civilis(?:é|ée|és|ées)\\b": "doté d’organisations sociales et politiques non occidentales",
-  "\\bsauvage\\b": "indigène, vivant selon des modes de vie autonomes",
-  "\\bprimitif\\b": "ancien ou traditionnel, mais sophistiqué dans son contexte",
-  "\\bpays\\s+sous-développé\\b": "pays du Sud structuré par les inégalités mondiales",
-  "\\btribu\\b": "peuple ou communauté autochtone",
-  "\\bconflit\\s+tribal\\b": "conflit politique complexe souvent exacerbé par la colonisation"
+  "\\bdécouv(?:re|rent|rait|rons|rir|rir|ris|rit|rais|raient|erte?s?|ert|erts|erte|ertes|rant|reur)\\b": "prise de contact avec une region deja peuplee et organisee",
+  "\\bmissionnaires?\\b": "acteurs d'une transformation culturelle souvent unilaterale",
+  "\\barrier(?:e|ee|es|ees|é|ée|és|ées)\\b": "different selon des cadres culturels et historiques propres",
+  "\\bnon\\s+civilis(?:e|ee|es|ees|é|ée|és|ées)\\b": "dote d'organisations sociales et politiques non occidentales",
+  "\\bsauvages?\\b": "indigene, vivant selon des modes de vie autonomes",
+  "\\bprimitif\\b": "ancien ou traditionnel, mais sophistique dans son contexte",
+  "\\bpays\\s+sous-developpe\\b": "pays du Sud structure par les inegalites mondiales",
+  "\\btribu\\b": "peuple ou communaute autochtone",
+  "\\bconflit\\s+tribal\\b": "conflit politique complexe souvent exacerbe par la colonisation",
+  "\\bbarbare\\b": "culture differente, non europeenne",
+  "\\bciviliser\\b": "imposer un modele culturel etranger"
 }
